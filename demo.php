@@ -1,6 +1,5 @@
 <?php
 require_once 'freeSwitchEsl.php';
-
 $freeswitch = new Freeswitchesl();
 $connect = $freeswitch->connect("127.0.0.1","8021","ClueCon");
 if ($connect) {
@@ -16,6 +15,12 @@ if ($connect) {
 	// 		// 监听指定字段
 	// 		$Event_Name = $freeswitch->getHeader($received_parameters,"Event-Name");
 	// 		echo $Event_Name;
+	// 		$uuid = $freeswitch->getHeader($received_parameters,"Channel-Call-UUID");
+	// 		var_dump($uuid);
+	// 		if (!empty($uuid)) {
+	// 			$freeswitch->executeAsync("playback","local_stream://moh",$uuid);
+	// 			$freeswitch->executeAsync("hangup","",$uuid);
+	// 		}
 	// 	}
 	// }
 }

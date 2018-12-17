@@ -21,24 +21,9 @@ class Freeswitchesl {
 
     public function typeClear($response)
     {
-        $commenType = array("Content-Type: text/event-xml","Content-Type: text/event-plain","Content-Type: text/event-json");
+        $commenType = array("Content-Type: text/event-xml\n","Content-Type: text/event-plain\n","Content-Type: text/event-json\n");
         return str_replace($commenType, '', $response);
     }
-
-    // private function getJsonReponseClean($response)
-    // {
-    //     $response = preg_match('/{\"?(.+)\"}/i',$response,$match);
-    //     $response = "{\"".$match[1]."\"}";
-    //     try {
-    //         $response = json_decode($response, true);
-    //     } catch (Exception $e) {
-    //         return false ;
-    //     }
-    //     if(is_array($response)){
-    //         return json_encode($response);
-    //     }
-    //     return false;
-    // }
 
     public function connect($host,$port,$password)
     {
@@ -84,19 +69,21 @@ class Freeswitchesl {
         return "executed";
     }
 
-    public function execute($app,$args="",$uuid="")
+    public function execute($app,$args,$uuid)
     {
         if ($this->socket) {
-            socket_write($this->socket, "execute ".$app." ".$args." ".$uuid."\r\n\r\n");
+            $str = "sendmsg ".$uuid."\ncall-command: execute\nexecute-app-name: ".$app."\nexecute-app-arg: ".$args."\n\n";
+            socket_write($this->socket, $str);
         }
         $response = $this->recvEvent("common");
         return $response;
     }
 
-    public function executeAsync($app,$args="",$uuid="")
+    public function executeAsync($app,$args,$uuid)
     {
         if ($this->socket) {
-            socket_write($this->socket, "execute ".$app." ".$args." ".$uuid."\r\n\r\n");
+            $str = "sendmsg ".$uuid."\ncall-command: executeAsync\nexecute-app-name: ".$app."\nexecute-app-arg: ".$args."\n\n";
+            socket_write($this->socket, $str);
         }
         return "executed";
     }
@@ -193,8 +180,8 @@ class Freeswitchesl {
                     $response .= $responseline;
                 }
                 $response .= "  </headers>\r\n</event>";
-                return $response;
             }
+            return $response;
         } elseif ($this->sorts == "xml") {
             $responsedata = simplexml_load_string($response);
             if ($type == "plain") {

@@ -59,21 +59,27 @@ $sofia = $freeswitch->api("show api");
 $originate = $freeswitch->bgapi("originate user/1000 &echo");
 ```
 
-#### 4、execute(comment,args,uuid)
+#### 4、execute(app,args,uuid)
 
-与`api(api comment)`方法相同，异步执行：
-```
-$originate = $freeswitch->bgapi("originate user/1000 &echo");
-```
-execute
+使用`sendmsg`实现`execute`方法，通过此方法可以执行`APP`消息：
 
-#### 5、executeAsync(comment,args,uuid)
+```
+# 给一通电话播放一段音乐
+$freeswitch->execute("playback","local_stream://moh",$uuid);
+# 挂断电话
+$freeswitch->execute("hangup","",$uuid);
+# 暂停识别
+$freeswitch->executeAsync("detect_speech","stop",$uuid);
+```
 
-与`api(api comment)`方法相同，异步执行：
+#### 5、executeAsync(app,args,uuid)
+
+使用`sendmsg`实现`execute`方法，通过此方法可以执行`APP`消息,与`execute`类似,只是为异步执行：
 ```
-$originate = $freeswitch->bgapi("originate user/1000 &echo");
+$freeswitch->executeAsync("playback","local_stream://moh",$uuid);
+$freeswitch->executeAsync("hangup","",$uuid);
+$freeswitch->executeAsync("detect_speech","stop",$uuid);
 ```
-execute
 
 #### 6、events(sorts,args)
 

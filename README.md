@@ -62,14 +62,36 @@ Similar to the `api comment` method, non-blocking mode asynchronous execution:
 $originate = $freeswitch->bgapi("originate user/1000 &echo");
 ```
 
-#### 4、events(sorts,args)
+#### 4、execute(app,args,uuid)
+
+The `execute` method is implemented using `sendmsg`, through which the `APP` message can be executed:
+
+```
+# playback
+$freeswitch->execute("playback","local_stream://moh",$uuid);
+# Hang up the phone
+$freeswitch->execute("hangup","",$uuid);
+# stop detect_speech
+$freeswitch->executeAsync("detect_speech","stop",$uuid);
+```
+
+#### 5、executeAsync(app,args,uuid)
+
+The `execute` method is implemented using `sendmsg`, through which the `APP` message can be executed;Similar to `execute`, only for asynchronous execution:
+```
+$freeswitch->executeAsync("playback","local_stream://moh",$uuid);
+$freeswitch->executeAsync("hangup","",$uuid);
+$freeswitch->executeAsync("detect_speech","stop",$uuid);
+```
+
+#### 6、events(sorts,args)
 
 The `event` command is used to subscribe to events from `FreeSWITCH`. You can specify all events monitored on the same line, which should be separated by spaces; `sorts`is the return data type and `args` is the monitored event.
 ```
 $status = $freeswitch->events("plain","ALL");
 ```
 
-#### 5、recvEvent()
+#### 7、recvEvent()
 
 It is used in conjunction with `events(sorts,args)`, to obtain all data and return the original data of the server.
 ```
@@ -110,6 +132,6 @@ if ($connect) {
 }
 ```
 
-#### 6、disconnect()
+#### 8、disconnect()
 
 Disconnect `socket` between `php` and `freeswitch`; it is recommended that it be disconnected after each use.
